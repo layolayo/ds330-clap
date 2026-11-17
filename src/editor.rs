@@ -21,6 +21,7 @@ enum Tab {
     GlobalFx,
     PatchesSysex,
     MidiLog,
+    BitwigHelp,
 }
 
 struct EditorUiState {
@@ -137,6 +138,7 @@ pub fn create(
                     ui.selectable_value(&mut ui_st.tab, Tab::GlobalFx, "Global FX & Master");
                     ui.selectable_value(&mut ui_st.tab, Tab::PatchesSysex, "SysEx & Backup (.syx)");
                     ui.selectable_value(&mut ui_st.tab, Tab::MidiLog, "MIDI Log");
+                    ui.selectable_value(&mut ui_st.tab, Tab::BitwigHelp, "Bitwig Setup");
                 });
                 ui.separator();
 
@@ -148,6 +150,7 @@ pub fn create(
                         draw_sysex_tab(ui, &params, &midi_state, &cmd_tx, &mut ui_st, dev_id)
                     }
                     Tab::MidiLog => draw_log_tab(ui, &midi_state),
+                    Tab::BitwigHelp => draw_bitwig_help_tab(ui),
                 });
             });
         },
@@ -646,6 +649,32 @@ fn draw_sysex_tab(
             }
         }
     }
+}
+
+fn draw_bitwig_help_tab(ui: &mut egui::Ui) {
+    ui.heading("Bitwig Multi-Channel Setup (Aide-Memoire)");
+    ui.separator();
+    ui.group(|ui| {
+        ui.label(RichText::new("1. Main DS-330 Track (Audio Return + Plugin)").strong());
+        ui.label("• Add Roland DS-330 Controller and select your MIDI Out port in the top bar.");
+        ui.label("• Leave 'Route Notes -> Active Part' UNCHECKED for multi-channel playback.");
+        ui.label("• Add Bitwig HW Instrument after it with MIDI Out = None and Audio In = your DS-330 audio inputs.");
+        ui.label("• Important: Do NOT assign the DS-330 MIDI port in Bitwig Settings -> Controllers or HW Instrument, or Bitwig will lock it.");
+    });
+    ui.add_space(6.0);
+    ui.group(|ui| {
+        ui.label(RichText::new("2. Extra MIDI Tracks (Part 2 Bass, Part 10 Drums, etc.)").strong());
+        ui.label("• Do NOT add HW Instrument on these tracks.");
+        ui.label("• Set each track's Output to: DS-330 -> Roland DS-330 Controller.");
+        ui.label("• Add Bitwig's Channel Map Note FX on the track (e.g. All -> 2, or All -> 10 for Drums).");
+        ui.label("• When playing live from a keyboard, arm/monitor the extra track (not the main DS-330 track).");
+    });
+    ui.add_space(6.0);
+    ui.group(|ui| {
+        ui.label(RichText::new("3. Quick Notes").strong());
+        ui.label("• Click 'GS Reset' to initialize all 16 parts (Part 10 = Drum1, others = Normal).");
+        ui.label("• TVF, TVA, and Vibrato use center = 64 (preset default). Raise Mod Wheel (CC 1) to hear Vibrato.");
+    });
 }
 
 fn draw_log_tab(ui: &mut egui::Ui, midi_state: &SharedMidiState) {
