@@ -666,7 +666,7 @@ fn draw_bitwig_help_tab(ui: &mut egui::Ui) {
         ui.label(RichText::new("2. Extra MIDI Tracks (Part 2 Bass, Part 10 Drums, etc.)").strong());
         ui.label("• Do NOT add HW Instrument on these tracks.");
         ui.label("• Set each track's Output to: Notes -> Tracks -> DS-330 (or Roland DS-330 Controller).");
-        ui.label("• Add Bitwig's Channel Map device on the track (e.g. All -> 2, or All -> 10 for Drums).");
+        ui.label("• Add Bitwig's Channel Map device on each track: 1->1 (Track 1), 1->2 (Track 2), 1->3 (Track 3), 1->10 (Drums) — or All->N.");
         ui.label("• When playing live from a keyboard, arm/monitor the extra track (not the main DS-330 track).");
     });
     ui.add_space(6.0);
